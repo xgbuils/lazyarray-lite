@@ -43,6 +43,20 @@ function test_quadratic_list () {
     })
 }
 
+function test_primes_list () {
+    it('returns 5th element of array', function () {
+        this.la.get(4).should.be.eql(11)
+    })
+
+    it('returns empty list', function() {
+        this.la.slice(0, 0).should.be.eql([])
+    })
+
+    it('returns first ten numbers', function() {
+        this.la.slice(0, 10).should.be.eql([2,3,5,7,11,13,17,19,23,29])
+    })
+}
+
 describe('using `init` and `next`', function () {
     describe('Natural list', function () {
         beforeEach(function () {
@@ -74,6 +88,35 @@ describe('using `init` and `next`', function () {
         })
 
         test_quadratic_list()
+    })
+
+    describe('Primes list', function () {
+        beforeEach(function () {
+            this.la = new LazyArray({
+                init: function () {
+                    this.nextToCheck = 2
+                },
+                next: function () {
+                    var toCheck = this.nextToCheck
+                    while (true) {
+                        var top = Math.floor(Math.sqrt(toCheck))
+                        for (i = 2; i <= top; ++i) {
+                            if (toCheck % i === 0) {
+                                break
+                            }
+                        }
+                        if (i > top) {
+                            break
+                        }
+                        toCheck++
+                    }
+                    this.nextToCheck = toCheck + 1
+                    return toCheck
+                }
+            })
+        })
+
+        test_primes_list()
     })
 })
 
