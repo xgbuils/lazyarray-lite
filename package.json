@@ -1,0 +1,23 @@
+{
+  "name": "lazyarray-lite",
+  "version": "0.0.1",
+  "description": "A light lazy array implementation",
+  "main": "LazyArray.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "lazy",
+    "array"
+  ],
+  "author": "Xavier Garcia Buils <xgbuils@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-mocha": "^2.0.1",
+    "should": "^5.2.0"
+  }
+}
