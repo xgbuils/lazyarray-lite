@@ -98,16 +98,7 @@ describe('using `init` and `next`', function () {
                 },
                 next: function () {
                     var toCheck = this.nextToCheck
-                    while (true) {
-                        var top = Math.floor(Math.sqrt(toCheck))
-                        for (i = 2; i <= top; ++i) {
-                            if (toCheck % i === 0) {
-                                break
-                            }
-                        }
-                        if (i > top) {
-                            break
-                        }
+                    while (!isPrime(toCheck)) {
                         toCheck++
                     }
                     this.nextToCheck = toCheck + 1
@@ -174,3 +165,15 @@ describe('using `get`', function () {
         test_quadratic_list()
     })
 })
+
+
+// extra functions
+function isPrime (num) {
+    var top = Math.floor(Math.sqrt(num))
+    for (i = 2; i <= top; ++i) {
+        if (num % i === 0) {
+            break
+        }
+    }
+    return i > top
+}
