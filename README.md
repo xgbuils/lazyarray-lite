@@ -5,7 +5,7 @@ A small lazy array implementation.
 Instead of generating a potentially huge array of objects (permutations, subsets, or whatever) only the required items are generated. Items that are not used by the program will never be generated and do not waste time and space in them
 
 ### Version
-0.1.1
+0.1.3
 
 ### Installation
 ```sh
