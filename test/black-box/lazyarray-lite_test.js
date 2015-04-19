@@ -43,6 +43,17 @@ function test_quadratic_list () {
     })
 }
 
+function test_finite_list () {
+    it('returns 3rd element', function () {
+        this.la.get(2).should.be.eql(2)
+    })
+
+    it('returns empty list', function() {
+        this.la.slice(3, 7).should.be.eql([3, 4])
+        this.la.length.should.be.eql(5)
+    })
+}
+
 function test_primes_list () {
     it('returns 5th element of array', function () {
         this.la.get(4).should.be.eql(11)
@@ -109,6 +120,25 @@ describe('using `init` and `next`', function () {
 
         test_primes_list()
     })
+
+    describe('Finite list', function () {
+        beforeEach(function () {
+            this.la = new LazyArray({
+                init: function () {
+                    this.value = 0
+                },
+                next: function () {
+                    if (this.value < 5) {
+                        return this.value++
+                    } else {
+                        return undefined
+                    }
+                }
+            })
+        })
+
+        test_finite_list()
+    })
 })
 
 describe('using `next` width predecessor parameter', function () {
@@ -138,6 +168,7 @@ describe('using `next` width predecessor parameter', function () {
 
         test_fibonacci_list()
     })
+
 })
 
 describe('using `get`', function () {
@@ -163,6 +194,16 @@ describe('using `get`', function () {
         })
 
         test_quadratic_list()
+    })
+
+    describe('Finite list', function () {
+        beforeEach(function () {
+            this.la = new LazyArray(function (i) {
+                return i < 5 ? i : undefined
+            })
+        })
+
+        test_finite_list()
     })
 })
 

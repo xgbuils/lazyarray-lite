@@ -1,14 +1,18 @@
 function LazyArray(options) {
-    if (!(this instanceof LazyArray)) {}
     var values  = this._values = {}
     var methods = this._methods = {}
 
     if (typeof options === 'function') {
         methods.get = options
-    } else if (options.get) {
-        methods.get = options.get
-    } else if (options.next){
-        methods.next = options.next
+    } else {
+        if (typeof options.length === 'number') {
+            this.length = options.length
+        }
+        if (options.get) {
+            methods.get = options.get
+        } else if (options.next){
+            methods.next = options.next
+        }
     }
 
     var elems = this._elems = methods.get ? {} : []
@@ -23,14 +27,6 @@ function LazyArray(options) {
     }
 }
 
-function slice(obj, min, max) {
-    var arr = []
-    for (var i = min; i < max; ++i) {
-        arr.push(obj[i])
-    }
-    return arr
-}
-
 LazyArray.prototype.get = function (index) {
     return this.slice(index, index + 1)[0]
 }
@@ -39,20 +35,50 @@ LazyArray.prototype.slice = function (min, max) {
     var elems   = this._elems
     var methods = this._methods
     if (methods.get) {
-        for (var i = min; i < max; ++i) {
-            if (!elems[i]) {
-                elems[i] = methods.get.call(null, i)
-            }
-        }
+        pushEach.call(this, min, max, function (index) {
+            return methods.get.call(null, index)
+        })
     } else {
         var nArgs  = methods.next.length
-        for (var i = elems.length; i < max; ++i) {
-            var predecessors = elems.slice(i - nArgs).reverse()
-            elems.push(methods.next.apply(this._values, predecessors))
-        }
+        pushEach.call(this, elems.length, max, function (index) {
+            var predecessors = this._elems.slice(index - nArgs).reverse()
+            return methods.next.apply(this._values, predecessors)
+        })
     }
 
     return slice(elems, min, max)
 }
 
 module.exports = LazyArray
+
+function slice(obj, min, max) {
+    var arr = []
+    for (var i = min; i < max; ++i) {
+        var item = obj[i]
+        if (item === undefined) {
+            break
+        } else {
+            arr.push(item)
+        }
+    }
+    return arr
+}
+
+function pushEach(min, max, cb) {
+    var elems = this._elems
+    var len   = this.length
+    if (len !== undefined && len < max)
+        max = len
+
+    for (var i = min; i < max; ++i) {
+        if (elems[i] === undefined) {
+            var item = cb.call(this, i)
+            if (item === undefined) {
+                this.length = i
+                break
+            } else {
+                elems[i] = item
+            }
+        }
+    }
+}
