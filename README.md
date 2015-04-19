@@ -1,6 +1,6 @@
 # lazyarray-lite
 
-A small lazy array implementation.
+A small lazy array class implementation.
 
 Instead of generating a potentially huge array of objects (permutations, subsets, or whatever) only the required items are generated. Items that are not used by the program will never be generated and do not waste time and space in them
 
@@ -11,18 +11,60 @@ Instead of generating a potentially huge array of objects (permutations, subsets
 ```sh
 $ npm install lazyarray-lite
 ```
-and use:
+
+### Example
 ``` javascript
 var LazyArray = require('lazyarray-lite')
-// ...
+
+var la = new LazyArray(function (i) {
+    return 2 * i
+}) // 0, 2, 4, 6, 8...
+
+la.slice(2, 5) // [2, 6, 8]
+la.get(5) // 10
 ```
 
 ### API
 
-#### #constructor (options)
-Create a new lazy array data type.
+- [constructor(options)](#constructor-options)
+  - [options](#options)
+  - [options.get(index)](#optionsgetposition)
+  - [options.next(predecessors...)](#optionsnextpredecessors)
+  - [options.{index integer}](#optionsinteger-index)
+  - [options.init()](#optionsinit)
+  - [options.length](#optionslength)
+- [get(index)](#get-index)
+- [slice(begin, end)](#slicebegin-end)
 
-If `options` parameter has `get` property function, this define the formula to get the `index-th` element of lazy array:
+
+#### constructor (options)
+Create a new lazy array data type.
+##### options
+- Type: Object
+
+  Options to pass to lazy array constructor
+
+
+- Type: Function
+
+  Syntactic sugar for `options.get`.
+
+  Example:
+  ``` javascript
+  var la = new LazyArray(function (index) {
+      return index * index
+  }) // 0, 1, 4, 9, 16, 25...
+
+  ```
+  For more information see `option.get`.
+
+##### options.get(position)
+Type: Function 
+
+
+Callback that define the formula to get element of lazy array based on its position.
+
+Example:
 ``` javascript
 var la = new LazyArray({
     get: function (index) {
@@ -30,23 +72,25 @@ var la = new LazyArray({
     }
 }) // 0, 1, 4, 9, 16, 25...
 ```
-Also is possible to define the same quadratic lazy list passing `options` as a function:
-``` javascript
-var la = new LazyArray(function (index) {
-    return index * index
-}) // 0, 1, 4, 9, 16, 25...
-```
-If `options` parameter has `next` property function and some integer properties, this function define the formula to get the successor value based on predecessors:
+
+##### options.next(predecessors...)
+Type: Function
+
+When is not possible to define element of lazy array based on its position, `options.next` define the formula to get the value based on its predecessors.
+
+`options.next` must be used with some integer index option that defines the first values of the lazy array.
+
+Example:
 ``` javascript
 // odd list
 la = new LazyArray({
-    1: 1,
+    0: 1,
     next: function (n) {
         return n + 2
     }
 }) // 1, 3, 5, 7, 9, 11...
 ```
-Or Fibonacci list:
+or
 ``` javascript
 // Fibonacci list
 la = new LazyArray({
@@ -57,7 +101,18 @@ la = new LazyArray({
     }
 }) // 0, 1, 1, 2, 3, 5, 8, 13...
 ```
-There are sequences that can not be expressed with a formula or based on the previous values (`next(predecessors...)`). Then it possible defining extra values on `init` property function and use and combine them with `next` function parameters:
+
+##### options.{integer index}
+Type: !== undefined
+
+Integer indexs (0, 1, 2, 10, 234, etc) correspond to elements of lazy array that are computed before to get for first time.
+
+##### options.init
+Type: Function
+
+There are sequences that can not be expressed with a formula or based on its predecessors. It possible to use extra values in `options.next` with `this` context and initialize this values in `options.init`.
+
+Example:
 ``` javascript
 // triangular sequence
 la = new LazyArray({
@@ -71,8 +126,9 @@ la = new LazyArray({
     }
 }) // 0, 1, 3, 6, 10, 15, 21...
 ```
-Or primes list:
+or
 ``` javascript
+// Fibonacci list
 la = new LazyArray({
     init: function () {
         this.nextToCheck = 2
@@ -98,26 +154,41 @@ function isPrime (num) {
 }
 ```
 
+##### options.length
+Type: Integer?
+
+It defines the maximum length of lazy array. If `options.length` is `undefined` or not defined, the lazy array created is infinity in potencial.
+
+Example:
+
+
 ###### Advice:
-It is advisable to use `get` property on constructor whenever possible because it has a higher performance. Using `next` property function, to get an array element before is necessary to calculate all their predecessors.
+It is advisable to use `options.get` on constructor whenever possible because it has a higher performance. Using `options.next` property function, to get an array element before is necessary to compute all its predecessors.
 
-#### #get (index)
-returns the specified element from a lazy array. 
-###### Parameters
-`index` is zero-based index to get extraction. 
+#### .get (index)
+returns the specified element from a lazy array.
+##### index
+Type: Integer
 
-** Caution: **
-This method uses memoization. Modify the elements of the returned array can produce unexpected behaviours.
+zero-based index to get element of lazy array. 
 
-#### #slice(min, max)
+**Caution:**
+This method uses memoization. Modify returned element of lazy array can produce unexpected behaviours.
+
+#### .slice(begin, end)
 returns a portion of a lazy array into a new array object.
 
-###### Parameters
-- `min` is zero-based index at which to begin extraction
-- `max` is zero-based index at which to end extraction. `slice` extracts up to but not including end.
+##### begin 
+Type: Integer
 
-** Caution: **
-This method uses memoization. Modify the elements of the returned array can produce unexpected behaviours.
+zero-based index at which to begin extraction
+##### max
+Type: Integer
+
+zero-based index at which to end extraction.
+
+**Caution:**
+This method uses memoization. Modify returned elements of lazy array can produce unexpected behaviours.
 
 ### Development
 
