@@ -1,13 +1,13 @@
 function LazyArray(options) {
     var values  = this._values = {}
     var methods = this._methods = {}
+    this.maxLength = Infinity
 
     if (typeof options === 'function') {
         methods.get = options
     } else {
-        if (typeof options.length === 'number') {
-            this.length = options.length
-        }
+        this.maxLength = typeof options.maxLength === 'number' ? options.maxLength : Infinity
+
         if (options.get) {
             methods.get = options.get
         } else if (options.next){
@@ -66,7 +66,7 @@ function slice(obj, min, max) {
 
 function pushEach(min, max, cb) {
     var elems = this._elems
-    var len   = this.length
+    var len   = this.maxLength
     if (len !== undefined && len < max)
         max = len
 
@@ -74,7 +74,7 @@ function pushEach(min, max, cb) {
         if (elems[i] === undefined) {
             var item = cb.call(this, i)
             if (item === undefined) {
-                this.length = i
+                this.maxLength = i
                 break
             } else {
                 elems[i] = item

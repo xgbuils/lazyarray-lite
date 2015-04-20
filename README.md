@@ -33,8 +33,9 @@ la.get(5) // 10
   - [options.{index integer}](#optionsinteger-index)
   - [options.init()](#optionsinit)
   - [options.length](#optionslength)
-- [get(index)](#get-index)
-- [slice(begin, end)](#slicebegin-end)
+- [.get(index)](#get-index)
+- [.slice(begin, end)](#slicebegin-end)
+- [.maxLength](#maxlength)
 
 
 #### constructor (options)
@@ -158,10 +159,10 @@ function isPrime (num) {
 }
 ```
 
-##### options.length
+##### options.maxLength
 Type: Integer?
 
-It defines the maximum length of lazy array. If `options.length` is `undefined` or not defined, the lazy array created is infinity in potencial.
+It defines the maximum length of lazy array. If `options.maxLength` is `undefined` or not defined, the lazy array created is infinity in potencial.
 
 Example:
 
@@ -193,6 +194,11 @@ zero-based index at which to end extraction.
 
 **Caution:**
 This method uses memoization. Modify returned elements of lazy array can produce unexpected behaviours.
+
+#### .maxLength
+Type: Integer | +infinity
+
+gets max length of lazy array.
 
 ### Development
 

@@ -20,13 +20,13 @@ describe('test Natural lazy list', function () {
             this.la.slice(0, 10).should.be.eql([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
         })
 
-        describe('and using `length` top 5 to lazy array', function () {
+        describe('and using `maxLength` top 5 to lazy array', function () {
             beforeEach(function () {
                 this.la = new LazyArray({
                     get: function (index) {
                         return index
                     },
-                    length: 5
+                    maxLength: 5
                 })
             })
             it('.get(7) returns undefined', function () {
@@ -124,13 +124,13 @@ describe('test Quadratic lazy list', function () {
             this.la.get(2).should.be.eql(4)
         })
 
-        describe('and using `length` top 8 to lazy array', function () {
+        describe('and using `maxLength` top 8 to lazy array', function () {
             beforeEach(function () {
                 this.la = new LazyArray({
                     get: function (index) {
                         return index * index
                     },
-                    length: 8
+                    maxLength: 8
                 })
             })
             it('.get(7) returns 49', function () {
@@ -175,7 +175,7 @@ describe('Primes list using `init` and `next`', function () {
         this.la.slice(0, 10).should.be.eql([2,3,5,7,11,13,17,19,23,29])
     })
 
-    describe('and using `length` top 12 to lazy array', function () {
+    describe('and using `maxLength` top 12 to lazy array', function () {
         beforeEach(function () {
              this.la = new LazyArray({
                 init: function () {
@@ -189,7 +189,7 @@ describe('Primes list using `init` and `next`', function () {
                     this.nextToCheck = toCheck + 1
                     return toCheck
                 },
-                length: 12
+                maxLength: 12
             })
         })
         it('.get(1000) returns undefined', function () {
@@ -229,7 +229,7 @@ describe('test Fibonacci list using `next` width predecessor parameters', functi
     })
 })
 
-describe('test finite list without explicit `length` property', function () {
+describe('test finite list without explicit `maxLength` property', function () {
     beforeEach(function () {
         this.la = new LazyArray(function (i) {
             return i < 5 ? i : undefined
@@ -240,13 +240,28 @@ describe('test finite list without explicit `length` property', function () {
         should(this.la.get(8)).be.eql(undefined)
     })
 
+    it('.get(8) does .maxLength equal to 8', function() {
+        this.la.get(8)
+        this.la.maxLength.should.be.eql(8)
+    })
+
     it('.slice(0, 2) returns first and 2nd elements of lazy array', function() {
         this.la.slice(0, 100).should.be.eql([0,1,2,3,4])
-        this.la.length.should.be.eql(5)
+        this.la.maxLength.should.be.eql(5)
+    })
+
+    it('.slice(0, 2) does .maxLength equal to 5', function() {
+        this.la.slice(0, 100)
+        this.la.maxLength.should.be.eql(5)
     })
 
     it('.slice(0, 10) returns from 1st to 10th elements of lazy array', function() {
         this.la.slice(7, 100).should.be.eql([])
+    })
+
+    it('.slice(0, 10) does .maxLength equal to 7', function() {
+        this.la.slice(7, 100)
+        this.la.maxLength.should.be.eql(7)
     })
 })
 
