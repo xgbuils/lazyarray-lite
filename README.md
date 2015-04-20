@@ -73,6 +73,8 @@ var la = new LazyArray({
 }) // 0, 1, 4, 9, 16, 25...
 ```
 
+Returns element lazy array type or undefined. If `options.get(index)` returns undefined it is assumed that there are not more elements and lazy array is a finite array and max length is `index`.
+
 ##### options.next(predecessors...)
 Type: Function
 
@@ -101,6 +103,8 @@ la = new LazyArray({
     }
 }) // 0, 1, 1, 2, 3, 5, 8, 13...
 ```
+
+Returns element lazy array type or undefined. If `options.next` returns undefined it is assumed that there are not more elements and lazy array is a finite array.
 
 ##### options.{integer index}
 Type: !== undefined
