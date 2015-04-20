@@ -20,9 +20,14 @@
   "author": "Xavier Garcia Buils <xgbuils@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "async": "^0.9.0",
     "gulp": "^3.8.11",
+    "gulp-bump": "^0.3.0",
     "gulp-mocha": "^2.0.1",
+    "gulp-notify": "^2.2.0",
+    "gulp-replace": "^0.5.3",
+    "gulp-util": "^3.0.4",
+    "semver": "^4.3.3",
     "should": "^5.2.0"
-  },
-  "license": "MIT"
+  }
 }
