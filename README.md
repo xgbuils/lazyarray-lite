@@ -28,11 +28,11 @@ la.get(5) // 10
 
 - [constructor(options)](#constructor-options)
   - [options](#options)
-  - [options.get(index)](#optionsgetposition)
+  - [options.get(position)](#optionsgetposition)
   - [options.next(predecessors...)](#optionsnextpredecessors)
   - [options.{index integer}](#optionsinteger-index)
   - [options.init()](#optionsinit)
-  - [options.length](#optionslength)
+  - [options.maxLength](#optionsmaxlength)
 - [.get(index)](#get-index)
 - [.slice(begin, end)](#slicebegin-end)
 - [.maxLength](#maxlength)
@@ -52,8 +52,8 @@ Create a new lazy array data type.
 
   Example:
   ``` javascript
-  var la = new LazyArray(function (index) {
-      return index * index
+  var la = new LazyArray(function (position) {
+      return position * position
   }) // 0, 1, 4, 9, 16, 25...
 
   ```
@@ -68,13 +68,13 @@ Callback that define the formula to get element of lazy array based on its posit
 Example:
 ``` javascript
 var la = new LazyArray({
-    get: function (index) {
-        return index * index
+    get: function (position) {
+        return position * position
     }
 }) // 0, 1, 4, 9, 16, 25...
 ```
 
-Returns element lazy array type or undefined. If `options.get(index)` returns undefined it is assumed that there are not more elements and lazy array is a finite array and max length is `index`.
+It returns element of lazy array or undefined. If `options.get(position)` returns undefined, it is assumed that there are not more elements and lazy array is finite and maximum length is `position`.
 
 ##### options.next(predecessors...)
 Type: Function
@@ -105,7 +105,7 @@ la = new LazyArray({
 }) // 0, 1, 1, 2, 3, 5, 8, 13...
 ```
 
-Returns element lazy array type or undefined. If `options.next` returns undefined it is assumed that there are not more elements and lazy array is a finite array.
+It returns element of lazy array or undefined. If `options.next` returns undefined it is assumed that there are not more elements and lazy array is finite.
 
 ##### options.{integer index}
 Type: !== undefined
@@ -165,7 +165,17 @@ Type: Integer?
 It defines the maximum length of lazy array. If `options.maxLength` is `undefined` or not defined, the lazy array created is infinity in potencial.
 
 Example:
+``` javascript
+var la = new LazyArray({
+    get: function (position) {
+        return position * position
+    },
+    maxLength: 5
+}) // 0, 1, 4, 9, 16. (STOP)
 
+la.get(2) // 4
+la.get(6) // undefined
+```
 
 ###### Advice:
 It is advisable to use `options.get` on constructor whenever possible because it has a higher performance. Using `options.next` property function, to get an array element before is necessary to compute all its predecessors.
@@ -187,7 +197,7 @@ returns a portion of a lazy array into a new array object.
 Type: Integer
 
 zero-based index at which to begin extraction
-##### max
+##### end
 Type: Integer
 
 zero-based index at which to end extraction.
@@ -196,7 +206,7 @@ zero-based index at which to end extraction.
 This method uses memoization. Modify returned elements of lazy array can produce unexpected behaviours.
 
 #### .maxLength
-Type: Integer | +infinity
+Type: Integer | +Infinity
 
 gets max length of lazy array.
 
