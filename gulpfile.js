@@ -6,6 +6,7 @@ var util    = require('gulp-util');
 var semver  = require('semver')
 var bump    = require('gulp-bump')
 var replace = require('gulp-replace')
+var insert  = require('gulp-insert')
 
 
 /*
@@ -28,6 +29,14 @@ gulp.task('test:bbox', function() {
  * test task
  */
 gulp.task('test', ['test:bbox', 'test:wbox'])
+
+gulp.task('bower', function () {
+  gulp.src('./lazyarray-lite.js')
+    .pipe(replace(/module.exports\s*=\s*LazyArray/g, ''))
+    .pipe(insert.prepend('window.LazyArray = (function () {\n'))
+    .pipe(insert.append('\nreturn LazyArray })()'))
+    .pipe(gulp.dest('./dist/'))
+})
 
 /*
  * bump task

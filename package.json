@@ -23,6 +23,7 @@
     "async": "^0.9.0",
     "gulp": "^3.8.11",
     "gulp-bump": "^0.3.0",
+    "gulp-insert": "^0.4.0",
     "gulp-mocha": "^2.0.1",
     "gulp-notify": "^2.2.0",
     "gulp-replace": "^0.5.3",
